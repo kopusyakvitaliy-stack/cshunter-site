@@ -1,0 +1,27 @@
+/* ── Profile Particles Canvas ────────────────────────────────────────────── */
+/* Цей файл підключається в header.php або profile.php */
+
+.profile-particles-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;              /* Між банером (z:1-2) і контентом (z:10+) */
+    pointer-events: none;    /* Не блокує кліки */
+    opacity: 1;
+    mix-blend-mode: screen;  /* Світлі частинки красиво змішуються */
+}
+
+/* Вимикаємо на пристроях з обмеженнями */
+@media (prefers-reduced-motion: reduce) {
+    .profile-particles-canvas {
+        display: none !important;
+    }
+}
+
+/* На дуже маленьких екранах — зменшуємо opacity */
+@media (max-width: 480px) {
+    .profile-particles-canvas {
+        opacity: 0.6;
+    }
+}
