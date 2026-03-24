@@ -1,0 +1,7 @@
+config.php
+.env
+cache/
+*.tar.gz
+*.swp
+archive-*.tar.gz
+PROFILE.PHP_BEFORE_REDISGN_AND_RAMKA

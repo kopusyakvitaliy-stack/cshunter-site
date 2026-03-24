@@ -1,0 +1,22 @@
+# Block direct access to internal admin files (prefixed with _)
+<FilesMatch "^_">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to SQL migration file
+<Files "admin_migrate.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# No directory listing
+Options -Indexes
+
+# No caching for admin pages
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

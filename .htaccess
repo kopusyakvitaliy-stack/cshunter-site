@@ -1,0 +1,43 @@
+RewriteEngine On
+
+# ── Чисті URL ─────────────────────────────────────────────────────────────────
+# /profile/STEAMID → /profile.php?id=STEAMID
+RewriteRule ^profile/(\d{17})/?$ /profile.php?id=$1 [L,QSA]
+
+# /profile/STEAMID/tab → /profile.php?id=STEAMID&tab=TAB
+RewriteRule ^profile/(\d{17})/(profile|friends|skinchanger|items)/?$ /profile.php?id=$1&tab=$2 [L,QSA]
+
+# /mode/SLUG → /mode.php?id=SLUG
+RewriteRule ^mode/([a-z0-9_-]+)/?$ /mode.php?id=$1 [L,QSA]
+
+# ── Захист includes/ — повністю закрити папку ─────────────────────────────────
+RewriteRule ^includes/ - [F,L]
+
+# ── Захист чутливих файлів ────────────────────────────────────────────────────
+<FilesMatch "\.(env|sql|log|sh|bak|tmp|gz|htpasswd|gitignore)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── Захист окремих PHP файлів що не мають викликатись напряму ─────────────────
+<FilesMatch "^(config|migrate_items|migrate_backgrounds)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── No directory listing ──────────────────────────────────────────────────────
+Options -Indexes
+
+# ── Security Headers ──────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+    # CSP — дозволяємо лише свої ресурси + Steam + Cloudflare CDN
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data: avatars.steamstatic.com avatars.akamai.steamstatic.com cdn.faceit.com *.faceit.com; connect-src 'self'; frame-ancestors 'self';"
+</IfModule>
+
+# ── Вимикаємо підпис сервера ──────────────────────────────────────────────────
+ServerSignature Off
